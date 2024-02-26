@@ -2,6 +2,12 @@
 #include <curl/curl.h>
 #include <string.h>
 #include <stdlib.h> 
+#include <unistd.h>
+
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 
 size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data) {
   size_t realsize = size * nmemb;
@@ -32,9 +38,28 @@ void extractLinks(char* html) {
 
     if (strncmp(start, "http://", 7) == 0 || strncmp(start, "https://", 8) == 0) {
       printf("%.*s\n", (int)(end-start), start);
+    } else {
+      ;
     }
     start = end + 1;
   }
+
+  // new here
+  start = html;
+  
+  printf("\n-- RELATIVE LINKS --\n");
+  while((start = strstr(start, "a href=\""))) {
+    start +=9;
+    end = strchr(start, '"');
+    if (!end) {
+      printf("[-] No closing quote found");
+    }
+    
+    printf("%.*s\n", (int)(end-start), start);
+    start = end+1;
+  }
+  
+  printf("\n[i] No more links have been found...\n");
 }
 
 int main() {
@@ -76,6 +101,7 @@ int main() {
   printf("[+] Successfully performed GET request!\n");
 
   /* ---------[ CLEAN-OUTPUT ]--------- */
+  sleep(5);
   extractLinks(data);
 
   /* ---------[ CLEAN-UP ]---------*/
