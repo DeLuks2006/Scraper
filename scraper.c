@@ -8,6 +8,7 @@
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
+void extractLinks(char* html);
 
 size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data) {
   size_t realsize = size * nmemb;
@@ -24,72 +25,17 @@ size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data) {
   return realsize;
 }
 
-void extractLinks(char* html) {
-  char *start, *end;
-  start = html;
-
-  while((start = strstr(start, "<a href=\""))) {
-    start += 9;
-    end = strchr(start, '"');
-    if (!end) {
-      printf("[-] No closing quote found.\n");
-      break;
-    }
-
-    if (strncmp(start, "http://", 7) == 0 || strncmp(start, "https://", 8) == 0) {
-      printf("%.*s\n", (int)(end-start), start);
-    } else {
-      ;
-    }
-    start = end + 1;
-  }
-
-  // new here
-  start = html;
-  
-  printf("\n-- RELATIVE LINKS --\n");
-  while((start = strstr(start, "a href=\""))) {
-    start +=9;
-    end = strchr(start, '"');
-    if (!end) {
-      printf("[-] No closing quote found");
-    }
-    
-    printf("%.*s\n", (int)(end-start), start);
-    start = end+1;
-  }
-  
-  printf("\n[i] No more links have been found...\n");
-}
-
-int main() {
-  /* ---------[ VARIABLE-DECLARATION ]---------*/
-  CURL*     curl;
-  CURLcode  res;
-  char      website[1024];
-  char*     data = NULL;
-
-  /* ---------[ INITIALIZATION-OF-CURL ]---------*/
-  curl_global_init(CURL_GLOBAL_ALL);
-  printf("[+] Sucessfully initialised CURL.\n");
+void anotherOne(char* link) {
+  CURL *curl;
+  CURLcode res;
+  char* data = NULL;
 
   curl = curl_easy_init();
   
-  if (!curl) {
-    printf("[-] Error getting a handle to curl_easy.\n");
-    exit(1);
-  }
-  printf("[+] Got a handle to curl_easy.\n");
-
-  /* ---------[ GETTING-STARTING-POINT ]--------- */
-  printf("[i] Enter a URL to start from: ");
-  scanf("%s", website);
-
-  curl_easy_setopt(curl, CURLOPT_URL, website);
-  printf("[i] Set CURLOPT_URL to \"%s\"\n", website);
+  curl_easy_setopt(curl, CURLOPT_URL, link);
+  printf("[i] Set CURLOPT_URL to \"%s\"\n", link);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
-
   curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
 
   /* ---------[ PERFORMING-REQUEST ]--------- */
@@ -104,11 +50,64 @@ int main() {
   sleep(5);
   extractLinks(data);
 
-  /* ---------[ CLEAN-UP ]---------*/
+  /* ---------[ CLEAN-UP ]--------- */
   printf("[i] Cleaning up...\n");
   curl_easy_cleanup(curl);
-  curl_global_cleanup();
   free(data);
+}
+
+void extractLinks(char* html) {
+  char *start, *end;
+
+  /* ---------[ GRABBING-FULL-LINKS ]--------- */
+  start = html;
+
+  while((start = strstr(start, "<a href=\""))) {
+    start += 9;
+    end = strchr(start, '"');
+    if (!end) {
+      printf("[-] No closing quote found.\n");
+      break;
+    }
+
+    if (strncmp(start, "http://", 7) == 0 || strncmp(start, "https://", 8) == 0) {
+      printf("%.*s\n", (int)(end-start), start);
+      
+      char linky[end - start + 1];
+      strncpy(linky, start, end - start);
+      linky[end - start] = '\0';
+      anotherOne(linky);
+    } else {
+      ;
+    }
+    start = end + 1;
+  }
+
+  /* ---------[ GRABBING-RELATIVE-LINKS ]--------- */
+  start = html;
+  
+  printf("\n-- RELATIVE LINKS --\n");
+  while((start = strstr(start, "a href=\""))) {
+    start +=9;
+    end = strchr(start, '"');
+    if (!end) {
+      printf("[-] No closing quote found");
+    }
+    
+    printf("%.*s\n", (int)(end-start), start);
+    start = end+1;
+  }
+  
+  printf("\n------------------------------------------------------------\n");
+}
+
+int main() {
+  /* ---------[ VARIABLE-DECLARATION ]--------- */
+  char      website[1024];
+ /* ---------[ GETTING-STARTING-POINT ]--------- */
+  printf("[i] Enter a URL to start from: ");
+  scanf("%s", website);
+  anotherOne(website);
 
   return 0;
 }
