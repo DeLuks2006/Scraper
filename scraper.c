@@ -8,7 +8,22 @@
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
+/* ---------[ PROTOTYPES ]--------- */
 void extractLinks(char* html);
+size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data);
+void anotherOne(char* link);
+void extractLinks(char* html)
+
+int main() {
+  /* ---------[ VARIABLE-DECLARATION ]--------- */
+  char      website[1024];
+ /* ---------[ GETTING-STARTING-POINT ]--------- */
+  printf("[i] Enter a URL to start from: ");
+  scanf("%s", website);
+  anotherOne(website);
+
+  return 0;
+}
 
 size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data) {
   size_t realsize = size * nmemb;
@@ -99,15 +114,4 @@ void extractLinks(char* html) {
   }
   
   printf("\n------------------------------------------------------------\n");
-}
-
-int main() {
-  /* ---------[ VARIABLE-DECLARATION ]--------- */
-  char      website[1024];
- /* ---------[ GETTING-STARTING-POINT ]--------- */
-  printf("[i] Enter a URL to start from: ");
-  scanf("%s", website);
-  anotherOne(website);
-
-  return 0;
 }
