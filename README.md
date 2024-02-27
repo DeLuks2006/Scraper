@@ -8,8 +8,7 @@
 - [X] Process Links
 - [X] Follow Links (grab the link, send anotha HTTP GET request, repeat)
 - [X] Data Extraction
-- [ ] Store Data
+- [ ] Store Data (to a file)
 - [ ] Handle Errors
-- [ ] Throttling
 - [ ] Optimize & Clean Up
 - [ ] Use Multithreading
