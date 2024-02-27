@@ -9,7 +9,7 @@ A Simple Web-Scraper made in C.
 - [X] Filter out the stinky HTML
 - [X] Process Links
 - [X] Follow Links (grab the link, send anotha HTTP GET request, repeat)
-- [ ] Data Extraction
+- [X] Data Extraction
 - [ ] Store Data
 - [ ] Handle Errors
 - [ ] Throttling
