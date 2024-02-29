@@ -12,7 +12,7 @@
 void extractLinks(char* html);
 size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data);
 void anotherOne(char* link);
-void extractLinks(char* html)
+void extractLinks(char* html);
 
 int main() {
   /* ---------[ VARIABLE-DECLARATION ]--------- */
@@ -73,6 +73,7 @@ void anotherOne(char* link) {
 
 void extractLinks(char* html) {
   char *start, *end;
+  FILE* file;
 
   /* ---------[ GRABBING-FULL-LINKS ]--------- */
   start = html;
@@ -91,6 +92,13 @@ void extractLinks(char* html) {
       char linky[end - start + 1];
       strncpy(linky, start, end - start);
       linky[end - start] = '\0';
+
+      // save to file 
+      file = fopen("links.txt", "a");
+      fprintf(file, "%s", linky);
+      fprintf(file, "\n");
+      fclose(file);
+
       anotherOne(linky);
     } else {
       ;
@@ -110,6 +118,18 @@ void extractLinks(char* html) {
     }
     
     printf("%.*s\n", (int)(end-start), start);
+    
+    char linky[end-start+1];
+    strncpy(linky, start, end-start);
+    linky[end-start] = '\0';
+
+    // save to file 
+    file = fopen("links.txt", "a");
+    fprintf(file, "%s", linky);
+    fprintf(file, "\n");
+    fclose(file);
+
+
     start = end+1;
   }
   
