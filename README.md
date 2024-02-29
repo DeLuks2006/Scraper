@@ -12,4 +12,4 @@ very cool. 👍
 - [X] Store Data (to a file)
 - [ ] Handle Errors
 - [ ] Optimize & Clean Up
-- [ ] Use Multithreading
+- [ ] ~~Use Multithreading~~ Yeah not doing that to myself
