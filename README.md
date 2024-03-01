@@ -9,7 +9,7 @@ very cool. 👍
 - [X] Process Links
 - [X] Follow Links (grab the link, send anotha HTTP GET request, repeat)
 - [X] Data Extraction
-- [ ] Store Data (to a file)
+- [X] Store Data (to a file)
 - [ ] Handle Errors
 - [ ] Optimize & Clean Up
-- [ ] Use Multithreading
+- [ ] ~~Use Multithreading~~ Yeah not doing that to myself
