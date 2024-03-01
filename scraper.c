@@ -11,16 +11,16 @@
 /* ---------[ PROTOTYPES ]--------- */
 void extractLinks(char* html);
 size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data);
-void anotherOne(char* link);
+void GetLink(char* link);
 void extractLinks(char* html);
 
 int main() {
   /* ---------[ VARIABLE-DECLARATION ]--------- */
-  char      website[1024];
+  char website[1024];
  /* ---------[ GETTING-STARTING-POINT ]--------- */
   printf("[i] Enter a URL to start from: ");
   scanf("%s", website);
-  anotherOne(website);
+  GetLink(website);
 
   return 0;
 }
@@ -40,10 +40,10 @@ size_t write_callback(void *ptr, size_t size, size_t nmemb, char **data) {
   return realsize;
 }
 
-void anotherOne(char* link) {
-  CURL *curl;
+void GetLink(char* link) {
+  CURL    *curl;
   CURLcode res;
-  char* data = NULL;
+  char    *data = NULL;
 
   curl = curl_easy_init();
   
@@ -62,7 +62,7 @@ void anotherOne(char* link) {
   printf("[+] Successfully performed GET request!\n");
 
   /* ---------[ CLEAN-OUTPUT ]--------- */
-  sleep(5);
+  
   extractLinks(data);
 
   /* ---------[ CLEAN-UP ]--------- */
@@ -72,8 +72,8 @@ void anotherOne(char* link) {
 }
 
 void extractLinks(char* html) {
-  char *start, *end;
-  FILE* file;
+  char  *start, *end;
+  FILE  *file;
 
   /* ---------[ GRABBING-FULL-LINKS ]--------- */
   start = html;
@@ -89,19 +89,23 @@ void extractLinks(char* html) {
     if (strncmp(start, "http://", 7) == 0 || strncmp(start, "https://", 8) == 0) {
       printf("%.*s\n", (int)(end-start), start);
       
-      char linky[end - start + 1];
-      strncpy(linky, start, end - start);
-      linky[end - start] = '\0';
-
+      char link[end - start + 1];
+      strncpy(link, start, end - start);
+      link[end - start] = '\0';
+      
       // save to file 
       file = fopen("links.txt", "a");
-      fprintf(file, "%s", linky);
+      if (file == NULL) {
+        printf("[-] Error: failed to open file.\n");
+        exit(1);
+      }
+      fprintf(file, "%s", link);
       fprintf(file, "\n");
       fclose(file);
 
-      anotherOne(linky);
+      GetLink(link);
     } else {
-      ;
+      ; // had to add this here because it was acting weird for some reason :P
     }
     start = end + 1;
   }
@@ -119,13 +123,18 @@ void extractLinks(char* html) {
     
     printf("%.*s\n", (int)(end-start), start);
     
-    char linky[end-start+1];
-    strncpy(linky, start, end-start);
-    linky[end-start] = '\0';
+    char link[end-start+1];
+    strncpy(link, start, end-start);
+    link[end-start] = '\0';
 
     // save to file 
     file = fopen("links.txt", "a");
-    fprintf(file, "%s", linky);
+    if (file == NULL) {
+      printf("[-] Error: failed to open file.\n");
+      exit(1);
+    }
+
+    fprintf(file, "%s", link);
     fprintf(file, "\n");
     fclose(file);
 
