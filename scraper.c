@@ -77,7 +77,11 @@ void extractLinks(char* html) {
 
   /* ---------[ GRABBING-FULL-LINKS ]--------- */
   start = html;
-
+  file = fopen("links.txt", "a");
+    if (file == NULL) {
+      printf("[-] Error: failed to open file.\n");
+      exit(1);
+    }
   while((start = strstr(start, "<a href=\""))) {
     start += 9;
     end = strchr(start, '"');
@@ -94,14 +98,8 @@ void extractLinks(char* html) {
       link[end - start] = '\0';
       
       // save to file 
-      file = fopen("links.txt", "a");
-      if (file == NULL) {
-        printf("[-] Error: failed to open file.\n");
-        exit(1);
-      }
       fprintf(file, "%s", link);
       fprintf(file, "\n");
-      fclose(file);
 
       GetLink(link);
     } else {
@@ -127,20 +125,14 @@ void extractLinks(char* html) {
     strncpy(link, start, end-start);
     link[end-start] = '\0';
 
-    // save to file 
-    file = fopen("links.txt", "a");
-    if (file == NULL) {
-      printf("[-] Error: failed to open file.\n");
-      exit(1);
-    }
-
     fprintf(file, "%s", link);
     fprintf(file, "\n");
-    fclose(file);
+
 
 
     start = end+1;
   }
+  fclose(file);
   
   printf("\n------------------------------------------------------------\n");
 }
