@@ -13,4 +13,4 @@ gcc scraper.c -o scraper -lcurl
 
 **Usage:**
 
-The user will be prompted for a http/https link: just paste on in there and you should be good to go.
+The user will be prompted for a http/https link; just paste one in there and you should be good to go.
