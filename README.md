@@ -1,4 +1,5 @@
-# Scraper - A Simple Web-Scraper made in C.
+<h1 align=center>Scraper</h1>
+<p align=center>A Simple Web-Scraper made in C.</p>
 
 This is a simple Web-Scraper made in C using libcurl. 
 
